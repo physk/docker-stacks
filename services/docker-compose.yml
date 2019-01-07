@@ -1,0 +1,53 @@
+version: "3"
+services:
+  # Traefik
+  traefik:
+    hostname: traefik
+    image: traefik:latest
+    env_file: /home/chris/docker-compose/.env
+    container_name: traefik
+    restart: always
+    domainname: ${DOMAIN}
+    networks:
+      - default
+      - traefik_proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - CLOUDFLARE_EMAIL=${CLOUDFLARE_EMAIL}
+      - CLOUDFLARE_API_KEY=${CLOUDFLARE_API_KEY}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:${TRAEFIK_SUBDOMAIN}.${DOMAIN}"
+      - "traefik.port=8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ${BASE_DIR}/services/traefik:/etc/traefik
+      - ${BASE_DIR}/docker/shared:/shared
+
+  portainer:
+    image: portainer/portainer
+    env_file: ../.env
+    container_name: portainer
+    restart: always
+    command: -H unix:///var/run/docker.sock
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${BASE_DIR}/services/portainer/data:/data
+      - ${BASE_DIR}/shared:/shared
+    environment:
+      - TZ=${TZ}
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:${PORTAINER_SUBDOMAIN}.${DOMAIN}"
+      - "traefik.port=9000"
+
+networks:
+  traefik_proxy:
+    external:
+      name: traefik_proxy
+  default:
+    driver: bridge

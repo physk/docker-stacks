@@ -1,0 +1,45 @@
+version: "3"
+services:
+
+  # Plex
+  plex:
+    hostname: plex
+    container_name: plex
+    image: plexinc/pms-docker:plexpass
+    env_file: /home/chris/docker-compose/.env
+    restart: unless-stopped
+    networks:
+      - default
+      - traefik_proxy
+    enviroment:
+      - "PLEX_UID=${PUID}""
+      - "PLEX_GID=${PGID}"
+      - "PLEX_CLAIM=${PLEX_CLAIM}"
+      - "ADVERTISE_IP=https://${PLEX_SUBDOMAIN}.${DOMAIN}"
+      - "HOME=/config"
+    ports:
+      - "1900:1900/udp"
+      - "3005:3005/tcp"
+      - "32400:32400/tcp"
+      - "32410:32410/udp"
+      - "32412:32412/udp"
+      - "32413:32413/udp"
+      - "32414:42414/udp"
+      - "32469:32469/tcp"
+      - "33400:32400/tcp"
+      - "33433:33433/tcp"
+      - "8324:8324/tcp"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.redirect.entryPoint=https"
+      - "traefik.frontend.rule=Host:https://${PLEX_SUBDOMAIN}.${DOMAIN}"
+      - "traefik.port=32400"
+      - "traefik.protocol=https"
+
+
+networks:
+  traefik_proxy:
+    external:
+      name: traefik_proxy
+  default:
+    driver: bridge
