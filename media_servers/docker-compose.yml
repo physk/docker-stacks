@@ -6,7 +6,6 @@ services:
     hostname: plex
     container_name: plex
     image: plexinc/pms-docker:plexpass
-    env_file: /home/chris/docker-compose/.env
     restart: unless-stopped
     networks:
       - default
@@ -35,7 +34,34 @@ services:
       - "traefik.frontend.rule=Host:https://${PLEX_SUBDOMAIN}.${DOMAIN}"
       - "traefik.port=32400"
       - "traefik.protocol=https"
+    volumes:
+      - "/mnt/unionfs:/unionfs"
+      - "${BASE_DIR}/media_servers/plex:/config"
+      - "/etc/localtime:/etc/localtime"
 
+  # Jellyfin
+  jellyfin:
+    hostname: jellyfin
+    container_name: jellyfin
+    image: jellyfin/jellyfin
+    restart: unless-stopped
+    networks:
+      - default
+      - traefik_proxy
+    enviroment:
+      - "UID=${PUID}"
+      - "GID=${PGID}"
+    ports:
+      - "8096:8096/tcp"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:https://${JELLYFIN_SUBDOMAIN}.${DOMAIN}"
+      - "traefik.port=8096"
+      - "traefik.protocol=https"
+    volumes:
+      - "/mnt/unionfs:/unionfs"
+      - "${BASE_DIR}/media_servers/jellyfin:/config"
+      - "/etc/localtime:/etc/localtime"
 
 networks:
   traefik_proxy:
