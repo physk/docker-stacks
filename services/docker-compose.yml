@@ -4,7 +4,6 @@ services:
   traefik:
     hostname: traefik
     image: traefik:latest
-    env_file: /home/chris/docker-compose/.env
     container_name: traefik
     restart: always
     domainname: ${DOMAIN}
@@ -28,7 +27,6 @@ services:
 
   portainer:
     image: portainer/portainer
-    env_file: ../.env
     container_name: portainer
     restart: always
     command: -H unix:///var/run/docker.sock
