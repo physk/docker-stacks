@@ -29,3 +29,8 @@ for env in $( cat /etc/environment | grep -v "#" | grep -Pv '^\s*$' ); do export
 cd ~/docker-stacks/services && \
 docker-compose up -d
 ```
+## Install Media Servers
+```
+cd ~/docker-stacks/media_servers && \
+docker-compose up -d
+```
