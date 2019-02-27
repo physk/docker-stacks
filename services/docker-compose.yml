@@ -46,7 +46,6 @@ services:
 
   # Speedtest
   speedtest:
-    name: speedtest
     container_name: speedtest
     image: physk/speedtest
     restart: always
@@ -61,12 +60,11 @@ services:
 
   # Netdata
   netdata:
-    name: netdata
     container_name: netdata
-    image:
+    image: titpetric/netdata
     volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock:rw",
-      - "/proc:/host/proc:ro",
+      - "/var/run/docker.sock:/var/run/docker.sock:rw"
+      - "/proc:/host/proc:ro"
       - "/sys:/host/sys:ro"
     labels:
       - "traefik.enable=true"
