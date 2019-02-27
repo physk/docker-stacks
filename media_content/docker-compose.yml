@@ -1,14 +1,13 @@
 version: "3"
 services:
   sonarra:
-    name: sonarra
     container_name: sonarra
     image: linuxserver/sonarr
     restart: unless-stopped
     networks:
       - default
       - traefik_proxy
-    enviroment:
+    environment:
       - TZ=${TZ}
       - PUID=${PUID}
       - PGID=${PGID}
@@ -23,14 +22,13 @@ services:
       - "/mnt/nzbget/completed:completed"
       - "/etc/localtime:/etc/localtime"
   sonarrk:
-    name: sonarrk
     container_name: sonarrk
     image: linuxserver/sonarr
     restart: unless-stopped
     networks:
       - default
       - traefik_proxy
-    enviroment:
+    environment:
       - TZ=${TZ}
       - PUID=${PUID}
       - PGID=${PGID}
@@ -45,14 +43,13 @@ services:
       - "/mnt/nzbget/completed:completed"
       - "/etc/localtime:/etc/localtime"
   radarra:
-    name: radarra
     container_name: radarra
     image: linuxserver/radarr
     restart: unless-stopped
     networks:
       - default
       - traefik_proxy
-    enviroment:
+    environment:
       - TZ=${TZ}
       - PUID=${PUID}
       - PGID=${PGID}
@@ -67,14 +64,13 @@ services:
       - "/mnt/nzbget/completed:completed"
       - "/etc/localtime:/etc/localtime"
   radarrk:
-    name: radarrk
     container_name: radarrk
     image: linuxserver/radarr
     restart: unless-stopped
     networks:
       - default
       - traefik_proxy
-    enviroment:
+    environment:
       - TZ=${TZ}
       - PUID=${PUID}
       - PGID=${PGID}
@@ -89,14 +85,13 @@ services:
       - "/mnt/nzbget/completed:completed"
       - "/etc/localtime:/etc/localtime"
   ombia:
-    name: ombia
     container_name: ombia
     image: linuxserver/ombi
     restart: unless-stopped
     networks:
       - default
       - traefik_proxy
-    enviroment:
+    environment:
       - TZ=${TZ}
       - PUID=${PUID}
       - PGID=${PGID}
@@ -110,14 +105,13 @@ services:
       - "${BASE_DIR}/media_content/ombia/appsettings.json:/opt/ombi/appsettings.json"
       - "/etc/localtime:/etc/localtime"
   ombik:
-    name: ombik
     container_name: ombik
     image: linuxserver/ombi
     restart: unless-stopped
     networks:
       - default
       - traefik_proxy
-    enviroment:
+    environment:
       - TZ=${TZ}
       - PUID=${PUID}
       - PGID=${PGID}
