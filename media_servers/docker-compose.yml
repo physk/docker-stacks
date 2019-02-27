@@ -10,7 +10,7 @@ services:
     networks:
       - default
       - traefik_proxy
-    enviroment:
+    environment:
       - "PLEX_UID=${PUID}"
       - "PLEX_GID=${PGID}"
       - "PLEX_CLAIM=${PLEX_CLAIM}"
@@ -48,7 +48,7 @@ services:
     networks:
       - default
       - traefik_proxy
-    enviroment:
+    environment:
       - "UID=${PUID}"
       - "GID=${PGID}"
     ports:
@@ -71,7 +71,7 @@ services:
     env_file: ${BASE_DIR}/media_servers/funkwhale/.env
     networks:
       - traefik_proxy
-    enviroment:
+    environment:
       - "PUID=${PUID}"
       - "PGID=${PGID}"
     labels:
