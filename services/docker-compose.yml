@@ -25,6 +25,7 @@ services:
       - ${BASE_DIR}/services/traefik:/etc/traefik
       - ${BASE_DIR}/docker/shared:/shared
 
+  # Portainer
   portainer:
     image: portainer/portainer
     container_name: portainer
@@ -42,6 +43,53 @@ services:
       - "traefik.enable=true"
       - "traefik.frontend.rule=Host:${PORTAINER_SUBDOMAIN}.${DOMAIN}"
       - "traefik.port=9000"
+
+  # Speedtest
+  speedtest:
+    name: speedtest
+    container_name: speedtest
+    image: physk/speedtest
+    restart: always
+    environment:
+      - TZ=${TZ}
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:${SPEEDTEST_SUBDOMAIN}.${DOMAIN}"
+      - "traefik.port=80"
+
+  # Netdata
+  netdata:
+    name: netdata
+    container_name: netdata
+    image:
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:rw",
+      - "/proc:/host/proc:ro",
+      - "/sys:/host/sys:ro"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:${NETDATA_SUBDOMAIN}.${DOMAIN}"
+      - "traefik.port=19999"
+  # Dash
+  # dash:
+  #   image: getholo/dash
+  #   container_name: dash
+  #   restart: always
+  #   privileged: true
+  #   volumes:
+  #     - /mnt/move:/mnt/move
+  #     - ${BASE_DIR}/services/dash:/config
+  #     - UNIONFS:/unionfs
+    # enviroment:
+    #   - TZ=${TZ}
+    #   - PUID=${PUID}
+    #   - PGID=${PGID}
+  #     - MOUNT=true
+  #     - TOKEN=${DASH_TOKEN}
+  #   network:
+  #     - default
 
 networks:
   traefik_proxy:

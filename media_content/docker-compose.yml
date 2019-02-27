@@ -1,0 +1,139 @@
+version: "3"
+services:
+  sonarra:
+    name: sonarra
+    container_name: sonarra
+    image: linuxserver/sonarr
+    restart: unless-stopped
+    networks:
+      - default
+      - traefik_proxy
+    enviroment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.redirect.entryPoint=https"
+      - "traefik.frontend.rule=Host:https://${SONARRA_SUBDOMAIN}.${DOMAIN}"
+      - "traefik.port=8989"
+    volumes:
+      - "/mnt/unionfs:/unionfs"
+      - "${BASE_DIR}/media_content/sonarra:/config"
+      - "/mnt/nzbget/completed:completed"
+      - "/etc/localtime:/etc/localtime"
+  sonarrk:
+    name: sonarrk
+    container_name: sonarrk
+    image: linuxserver/sonarr
+    restart: unless-stopped
+    networks:
+      - default
+      - traefik_proxy
+    enviroment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.redirect.entryPoint=https"
+      - "traefik.frontend.rule=Host:https://${SONARRK_SUBDOMAIN}.${DOMAIN}"
+      - "traefik.port=8989"
+    volumes:
+      - "/mnt/unionfs:/unionfs"
+      - "${BASE_DIR}/media_content/sonarrk:/config"
+      - "/mnt/nzbget/completed:completed"
+      - "/etc/localtime:/etc/localtime"
+  radarra:
+    name: radarra
+    container_name: radarra
+    image: linuxserver/radarr
+    restart: unless-stopped
+    networks:
+      - default
+      - traefik_proxy
+    enviroment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.redirect.entryPoint=https"
+      - "traefik.frontend.rule=Host:https://${RADARRA_SUBDOMAIN}.${DOMAIN}"
+      - "traefik.port=7878"
+    volumes:
+      - "/mnt/unionfs:/unionfs"
+      - "${BASE_DIR}/media_content/radarra:/config"
+      - "/mnt/nzbget/completed:completed"
+      - "/etc/localtime:/etc/localtime"
+  radarrk:
+    name: radarrk
+    container_name: radarrk
+    image: linuxserver/radarr
+    restart: unless-stopped
+    networks:
+      - default
+      - traefik_proxy
+    enviroment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.redirect.entryPoint=https"
+      - "traefik.frontend.rule=Host:https://${RADARRK_SUBDOMAIN}.${DOMAIN}"
+      - "traefik.port=7878"
+    volumes:
+      - "/mnt/unionfs:/unionfs"
+      - "${BASE_DIR}/media_content/radarra:/config"
+      - "/mnt/nzbget/completed:completed"
+      - "/etc/localtime:/etc/localtime"
+  ombia:
+    name: ombia
+    container_name: ombia
+    image: linuxserver/ombi
+    restart: unless-stopped
+    networks:
+      - default
+      - traefik_proxy
+    enviroment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.redirect.entryPoint=https"
+      - "traefik.frontend.rule=Host:https://${OMBIA_SUBDOMAIN}.${DOMAIN}"
+      - "traefik.port=3579"
+    volumes:
+      - "${BASE_DIR}/media_content/ombia:/config"
+      - "${BASE_DIR}/media_content/ombia/appsettings.json:/opt/ombi/appsettings.json"
+      - "/etc/localtime:/etc/localtime"
+  ombik:
+    name: ombik
+    container_name: ombik
+    image: linuxserver/ombi
+    restart: unless-stopped
+    networks:
+      - default
+      - traefik_proxy
+    enviroment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.redirect.entryPoint=https"
+      - "traefik.frontend.rule=Host:https://${OMBIK_SUBDOMAIN}.${DOMAIN}"
+      - "traefik.port=3579"
+    volumes:
+      - "${BASE_DIR}/media_content/ombik:/config"
+      - "${BASE_DIR}/media_content/ombik/appsettings.json:/opt/ombi/appsettings.json"
+      - "/etc/localtime:/etc/localtime"
+
+networks:
+  traefik_proxy:
+    external:
+      name: traefik_proxy
+  default:
+    driver: bridge

@@ -63,6 +63,26 @@ services:
       - "${BASE_DIR}/media_servers/jellyfin:/config"
       - "/etc/localtime:/etc/localtime"
 
+  funkwhale:
+    hostname: funkwhale
+    container_name: funkwhale
+    image: funkwhale/all-in-one
+    restart: unless-stopped
+    env_file: ${BASE_DIR}/media_servers/funkwhale/.env
+    networks:
+      - traefik_proxy
+    enviroment:
+      - "PUID=${PUID}"
+      - "PGID=${PGID"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:https://${FUNKWHALE_SUBDOMAIN}.${DOMAIN}"
+      - "traefik.port=80"
+      - "traefik.protocol=https"
+    volumes:
+      - "${BASE_DIR}/media_servers/funkwhale/data:/data"
+      - "${MUSIC_PATH}/music:/music"
+
 networks:
   traefik_proxy:
     external:
