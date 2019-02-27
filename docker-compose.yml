@@ -1,0 +1,301 @@
+version: "3"
+services:
+  # Traefik
+  traefik:
+    hostname: traefik
+    image: traefik:latest
+    container_name: traefik
+    restart: always
+    domainname: ${DOMAIN}
+    networks:
+      - default
+      - traefik_proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - CLOUDFLARE_EMAIL=${CLOUDFLARE_EMAIL}
+      - CLOUDFLARE_API_KEY=${CLOUDFLARE_API_KEY}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:${TRAEFIK_SUBDOMAIN}.${DOMAIN}"
+      - "traefik.port=8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ${BASE_DIR}/services/traefik:/etc/traefik
+      - ${BASE_DIR}/docker/shared:/shared
+
+  # Portainer
+  portainer:
+    image: portainer/portainer
+    container_name: portainer
+    restart: always
+    command: -H unix:///var/run/docker.sock
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${BASE_DIR}/services/portainer/data:/data
+      - ${BASE_DIR}/shared:/shared
+    environment:
+      - TZ=${TZ}
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:${PORTAINER_SUBDOMAIN}.${DOMAIN}"
+      - "traefik.port=9000"
+
+  # Speedtest
+  speedtest:
+    container_name: speedtest
+    image: physk/speedtest
+    restart: always
+    environment:
+      - TZ=${TZ}
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:${SPEEDTEST_SUBDOMAIN}.${DOMAIN}"
+      - "traefik.port=80"
+
+  # Netdata
+  netdata:
+    container_name: netdata
+    image: titpetric/netdata
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:rw"
+      - "/proc:/host/proc:ro"
+      - "/sys:/host/sys:ro"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:${NETDATA_SUBDOMAIN}.${DOMAIN}"
+      - "traefik.port=19999"
+  # Dash
+  # dash:
+  #   image: getholo/dash
+  #   container_name: dash
+  #   restart: always
+  #   privileged: true
+  #   volumes:
+  #     - /mnt/move:/mnt/move
+  #     - ${BASE_DIR}/services/dash:/config
+  #     - UNIONFS:/unionfs
+    # enviroment:
+    #   - TZ=${TZ}
+    #   - PUID=${PUID}
+    #   - PGID=${PGID}
+  #     - MOUNT=true
+  #     - TOKEN=${DASH_TOKEN}
+  #   network:
+  #     - default
+  # Plex
+  plex:
+    hostname: plex
+    container_name: plex
+    image: plexinc/pms-docker:plexpass
+    restart: unless-stopped
+    networks:
+      - traefik_proxy
+      # - default
+    environment:
+      - "PLEX_UID=${PUID}"
+      - "PLEX_GID=${PGID}"
+      - "PLEX_CLAIM=${PLEX_CLAIM}"
+      - "ADVERTISE_IP=https://${PLEX_SUBDOMAIN}.${DOMAIN}"
+      - "HOME=/config"
+    ports:
+      - "1900:1900/udp"
+      - "3005:3005/tcp"
+      - "32400:32400/tcp"
+      - "32410:32410/udp"
+      - "32412:32412/udp"
+      - "32413:32413/udp"
+      - "32414:42414/udp"
+      - "32469:32469/tcp"
+      - "33400:32400/tcp"
+      - "33433:33433/tcp"
+      - "8324:8324/tcp"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.redirect.entryPoint=https"
+      - "traefik.frontend.rule=Host:${PLEX_SUBDOMAIN}.${DOMAIN}"
+      - "traefik.port=32400"
+      - "traefik.protocol=https"
+    volumes:
+      - "/mnt/unionfs:/unionfs"
+      - "${BASE_DIR}/media_servers/plex:/config"
+      - "/etc/localtime:/etc/localtime"
+
+  # Jellyfin
+  jellyfin:
+    hostname: jellyfin
+    container_name: jellyfin
+    image: jellyfin/jellyfin
+    restart: unless-stopped
+    networks:
+      - traefik_proxy
+      # - default
+    environment:
+      - "UID=${PUID}"
+      - "GID=${PGID}"
+    ports:
+      - "8096:8096/tcp"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:${JELLYFIN_SUBDOMAIN}.${DOMAIN}"
+      - "traefik.port=8096"
+      - "traefik.protocol=https"
+    volumes:
+      - "/mnt/unionfs:/media"
+      - "${BASE_DIR}/media_servers/jellyfin:/config"
+      - "/etc/localtime:/etc/localtime"
+
+  funkwhale:
+    hostname: funkwhale
+    container_name: funkwhale
+    image: funkwhale/all-in-one:0.18.2
+    restart: unless-stopped
+    env_file: ${BASE_DIR}/media_servers/funkwhale/.env
+    networks:
+      - traefik_proxy
+    environment:
+      - "PUID=${PUID}"
+      - "PGID=${PGID}"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:${FUNKWHALE_SUBDOMAIN}.${DOMAIN}"
+      - "traefik.port=80"
+      - "traefik.protocol=https"
+    volumes:
+      - "${BASE_DIR}/media_servers/funkwhale/data:/data"
+      - "${FUNKWHALE_MUSIC_PATH}:/music"
+    sonarra:
+    container_name: sonarra
+    image: linuxserver/sonarr
+    restart: unless-stopped
+    networks:
+      # - default
+      - traefik_proxy
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.redirect.entryPoint=https"
+      - "traefik.frontend.rule=Host:${SONARRA_SUBDOMAIN}.${DOMAIN}"
+      - "traefik.port=8989"
+    volumes:
+      - "/mnt/unionfs:/unionfs"
+      - "${BASE_DIR}/media_content/sonarra:/config"
+      - "/mnt/nzbget/completed:/completed"
+      - "/etc/localtime:/etc/localtime"
+  sonarrk:
+    container_name: sonarrk
+    image: linuxserver/sonarr
+    restart: unless-stopped
+    networks:
+      # - default
+      - traefik_proxy
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.redirect.entryPoint=https"
+      - "traefik.frontend.rule=Host:${SONARRK_SUBDOMAIN}.${DOMAIN}"
+      - "traefik.port=8989"
+    volumes:
+      - "/mnt/unionfs:/unionfs"
+      - "${BASE_DIR}/media_content/sonarrk:/config"
+      - "/mnt/nzbget/completed:/completed"
+      - "/etc/localtime:/etc/localtime"
+  radarra:
+    container_name: radarra
+    image: linuxserver/radarr
+    restart: unless-stopped
+    networks:
+      # - default
+      - traefik_proxy
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.redirect.entryPoint=https"
+      - "traefik.frontend.rule=Host:${RADARRA_SUBDOMAIN}.${DOMAIN}"
+      - "traefik.port=7878"
+    volumes:
+      - "/mnt/unionfs:/unionfs"
+      - "${BASE_DIR}/media_content/radarra:/config"
+      - "/mnt/nzbget/completed:/completed"
+      - "/etc/localtime:/etc/localtime"
+  radarrk:
+    container_name: radarrk
+    image: linuxserver/radarr
+    restart: unless-stopped
+    networks:
+      # - default
+      - traefik_proxy
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.redirect.entryPoint=https"
+      - "traefik.frontend.rule=Host:${RADARRK_SUBDOMAIN}.${DOMAIN}"
+      - "traefik.port=7878"
+    volumes:
+      - "/mnt/unionfs:/unionfs"
+      - "${BASE_DIR}/media_content/radarra:/config"
+      - "/mnt/nzbget/completed:/completed"
+      - "/etc/localtime:/etc/localtime"
+  ombia:
+    container_name: ombia
+    image: linuxserver/ombi
+    restart: unless-stopped
+    networks:
+      # - default
+      - traefik_proxy
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.redirect.entryPoint=https"
+      - "traefik.frontend.rule=Host:${OMBIA_SUBDOMAIN}.${DOMAIN}"
+      - "traefik.port=3579"
+    volumes:
+      - "${BASE_DIR}/media_content/ombia:/config"
+      - "${BASE_DIR}/media_content/ombia/appsettings.json:/opt/ombi/appsettings.json"
+      - "/etc/localtime:/etc/localtime"
+  ombik:
+    container_name: ombik
+    image: linuxserver/ombi
+    restart: unless-stopped
+    networks:
+      # - default
+      - traefik_proxy
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.redirect.entryPoint=https"
+      - "traefik.frontend.rule=Host:${OMBIK_SUBDOMAIN}.${DOMAIN}"
+      - "traefik.port=3579"
+    volumes:
+      - "${BASE_DIR}/media_content/ombik:/config"
+      - "${BASE_DIR}/media_content/ombik/appsettings.json:/opt/ombi/appsettings.json"
+      - "/etc/localtime:/etc/localtime"
+networks:
+  traefik_proxy:
+    external:
+      name: traefik_proxy
+  default:
+    driver: bridge
