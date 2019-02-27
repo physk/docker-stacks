@@ -73,7 +73,7 @@ services:
       - traefik_proxy
     enviroment:
       - "PUID=${PUID}"
-      - "PGID=${PGID"
+      - "PGID=${PGID}"
     labels:
       - "traefik.enable=true"
       - "traefik.frontend.rule=Host:https://${FUNKWHALE_SUBDOMAIN}.${DOMAIN}"
