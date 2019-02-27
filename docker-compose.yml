@@ -169,7 +169,7 @@ services:
     volumes:
       - "${BASE_DIR}/media_servers/funkwhale/data:/data"
       - "${FUNKWHALE_MUSIC_PATH}:/music"
-    sonarra:
+  sonarra:
     container_name: sonarra
     image: linuxserver/sonarr
     restart: unless-stopped
