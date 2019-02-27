@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 mkdir -p ${BASE_DIR}/media_servers/funkwhale/
 cd ${BASE_DIR}/media_servers/funkwhale/
 touch .env
