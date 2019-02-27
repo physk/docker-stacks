@@ -5,7 +5,7 @@ services:
     image: linuxserver/sonarr
     restart: unless-stopped
     networks:
-      - default
+      # - default
       - traefik_proxy
     environment:
       - TZ=${TZ}
@@ -26,7 +26,7 @@ services:
     image: linuxserver/sonarr
     restart: unless-stopped
     networks:
-      - default
+      # - default
       - traefik_proxy
     environment:
       - TZ=${TZ}
@@ -47,7 +47,7 @@ services:
     image: linuxserver/radarr
     restart: unless-stopped
     networks:
-      - default
+      # - default
       - traefik_proxy
     environment:
       - TZ=${TZ}
@@ -68,7 +68,7 @@ services:
     image: linuxserver/radarr
     restart: unless-stopped
     networks:
-      - default
+      # - default
       - traefik_proxy
     environment:
       - TZ=${TZ}
@@ -89,7 +89,7 @@ services:
     image: linuxserver/ombi
     restart: unless-stopped
     networks:
-      - default
+      # - default
       - traefik_proxy
     environment:
       - TZ=${TZ}
@@ -109,7 +109,7 @@ services:
     image: linuxserver/ombi
     restart: unless-stopped
     networks:
-      - default
+      # - default
       - traefik_proxy
     environment:
       - TZ=${TZ}
