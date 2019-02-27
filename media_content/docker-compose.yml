@@ -19,7 +19,7 @@ services:
     volumes:
       - "/mnt/unionfs:/unionfs"
       - "${BASE_DIR}/media_content/sonarra:/config"
-      - "/mnt/nzbget/completed:completed"
+      - "/mnt/nzbget/completed:/completed"
       - "/etc/localtime:/etc/localtime"
   sonarrk:
     container_name: sonarrk
@@ -40,7 +40,7 @@ services:
     volumes:
       - "/mnt/unionfs:/unionfs"
       - "${BASE_DIR}/media_content/sonarrk:/config"
-      - "/mnt/nzbget/completed:completed"
+      - "/mnt/nzbget/completed:/completed"
       - "/etc/localtime:/etc/localtime"
   radarra:
     container_name: radarra
@@ -61,7 +61,7 @@ services:
     volumes:
       - "/mnt/unionfs:/unionfs"
       - "${BASE_DIR}/media_content/radarra:/config"
-      - "/mnt/nzbget/completed:completed"
+      - "/mnt/nzbget/completed:/completed"
       - "/etc/localtime:/etc/localtime"
   radarrk:
     container_name: radarrk
@@ -82,7 +82,7 @@ services:
     volumes:
       - "/mnt/unionfs:/unionfs"
       - "${BASE_DIR}/media_content/radarra:/config"
-      - "/mnt/nzbget/completed:completed"
+      - "/mnt/nzbget/completed:/completed"
       - "/etc/localtime:/etc/localtime"
   ombia:
     container_name: ombia
