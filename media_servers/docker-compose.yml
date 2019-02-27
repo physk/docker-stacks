@@ -66,7 +66,7 @@ services:
   funkwhale:
     hostname: funkwhale
     container_name: funkwhale
-    image: funkwhale/all-in-one
+    image: funkwhale/all-in-one:0.18.2
     restart: unless-stopped
     env_file: ${BASE_DIR}/media_servers/funkwhale/.env
     networks:
