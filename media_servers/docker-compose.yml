@@ -68,12 +68,15 @@ services:
     container_name: funkwhale
     image: funkwhale/all-in-one
     restart: unless-stopped
-    env_file: ${BASE_DIR}/media_servers/funkwhale/.env
+    #env_file: ${BASE_DIR}/media_servers/funkwhale/.env
     networks:
       - traefik_proxy
     environment:
       - "PUID=${PUID}"
       - "PGID=${PGID}"
+      - "FUNKWHALE_HOSTNAME=${FUNKWHALE_SUBDOMAIN}.${DOMAIN}"
+      - "FUNKWHALE_PROTOCOL=http"
+      - "DJANGO_SECRET_KEY=$(openssl rand -hex 45)"
     labels:
       - "traefik.enable=true"
       - "traefik.frontend.rule=Host:https://${FUNKWHALE_SUBDOMAIN}.${DOMAIN}"
@@ -81,7 +84,7 @@ services:
       - "traefik.protocol=https"
     volumes:
       - "${BASE_DIR}/media_servers/funkwhale/data:/data"
-      - "${MUSIC_PATH}/music:/music"
+      - "${FUNKWHALE_MUSIC_PATH}/music:/music"
 
 networks:
   traefik_proxy:
