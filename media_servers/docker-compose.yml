@@ -11,7 +11,7 @@ services:
       - default
       - traefik_proxy
     enviroment:
-      - "PLEX_UID=${PUID}""
+      - "PLEX_UID=${PUID}"
       - "PLEX_GID=${PGID}"
       - "PLEX_CLAIM=${PLEX_CLAIM}"
       - "ADVERTISE_IP=https://${PLEX_SUBDOMAIN}.${DOMAIN}"
