@@ -59,7 +59,7 @@ services:
       - "traefik.port=8096"
       - "traefik.protocol=https"
     volumes:
-      - "/mnt/unionfs:/unionfs"
+      - "/mnt/unionfs:/media"
       - "${BASE_DIR}/media_servers/jellyfin:/config"
       - "/etc/localtime:/etc/localtime"
 
