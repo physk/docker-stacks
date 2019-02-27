@@ -31,7 +31,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.frontend.redirect.entryPoint=https"
-      - "traefik.frontend.rule=Host:https://${PLEX_SUBDOMAIN}.${DOMAIN}"
+      - "traefik.frontend.rule=Host:${PLEX_SUBDOMAIN}.${DOMAIN}"
       - "traefik.port=32400"
       - "traefik.protocol=https"
     volumes:
@@ -55,7 +55,7 @@ services:
       - "8096:8096/tcp"
     labels:
       - "traefik.enable=true"
-      - "traefik.frontend.rule=Host:https://${JELLYFIN_SUBDOMAIN}.${DOMAIN}"
+      - "traefik.frontend.rule=Host:${JELLYFIN_SUBDOMAIN}.${DOMAIN}"
       - "traefik.port=8096"
       - "traefik.protocol=https"
     volumes:
@@ -76,7 +76,7 @@ services:
       - "PGID=${PGID}"
     labels:
       - "traefik.enable=true"
-      - "traefik.frontend.rule=Host:https://${FUNKWHALE_SUBDOMAIN}.${DOMAIN}"
+      - "traefik.frontend.rule=Host:${FUNKWHALE_SUBDOMAIN}.${DOMAIN}"
       - "traefik.port=80"
       - "traefik.protocol=https"
     volumes:
