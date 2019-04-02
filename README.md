@@ -12,12 +12,18 @@ sudo curl -L https://github.com/docker/compose/releases/download/1.23.1/docker-c
 sudo chmod +x /usr/local/bin/docker-compose && \
 sudo usermod -aG docker ${USER}
 ```
-
+> Log out and Log In to get the new docker group on your user
 ## Clone git
 ```
 cd ~ && \
 git clone https://github.com/physk/docker-stacks.git
 ```
+
+### Setup Dash if you have not already
+```
+cd ~/docker-stacks/services && \
+docker-compose pull && \
+docker-compose run --rm dash /usr/bin/dash-setup.sh```
 
 ## Setup ENV
 ### Edit .env file
@@ -33,10 +39,12 @@ for env in $( cat /etc/environment | grep -v "#" | grep -Pv '^\s*$' ); do export
 ## Install Services
 ```
 cd ~/docker-stacks/services && \
+chmod +x ./setup.sh && ./setup.sh && \
 docker-compose up -d
 ```
 ## Install Media Servers
 ```
 cd ~/docker-stacks/media_servers && \
+chmod +x setup.sh && ./setup.sh && \
 docker-compose up -d
 ```
