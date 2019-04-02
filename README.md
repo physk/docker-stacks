@@ -48,3 +48,9 @@ cd ~/docker-stacks/media_servers && \
 chmod +x setup.sh && ./setup.sh && \
 docker-compose up -d
 ```
+
+## Install Media Content Aggrgators
+```
+cd ~/docker-stacks/media_content && \
+docker-compose up
+```
