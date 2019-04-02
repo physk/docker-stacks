@@ -1,8 +1,10 @@
 #!/bin/bash
+echo "Creating funkwhale data directory"
 mkdir -p ${BASE_DIR}/media_servers/funkwhale/
-cd ${BASE_DIR}/media_servers/funkwhale/
-touch .env
-echo "FUNKWHALE_HOSTNAME=${FUNKWHALE_SUBDOMAIN}.${DOMAIN}" >> .env
-echo "FUNKWHALE_PROTOCOL=http" >> .env
-echo "DJANGO_SECRET_KEY=$(openssl rand -hex 45)" >> .env
-echo "NESTED_PROXY=1" >> .env
+
+echo "Creating funkwhale .env"
+touch ${BASE_DIR}/media_servers/funkwhale/.env
+echo "FUNKWHALE_HOSTNAME=${FUNKWHALE_SUBDOMAIN}.${DOMAIN}" >> ${BASE_DIR}/media_servers/funkwhale/.env
+echo "FUNKWHALE_PROTOCOL=http" >> ${BASE_DIR}/media_servers/funkwhale/.env
+echo "DJANGO_SECRET_KEY=$(openssl rand -hex 45)" >> ${BASE_DIR}/media_servers/funkwhale/.env
+echo "NESTED_PROXY=1" >> ${BASE_DIR}/media_servers/funkwhale/.env
