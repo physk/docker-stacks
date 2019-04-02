@@ -1,0 +1,51 @@
+################################################################
+# traefik.toml
+################################################################
+# Global configuration
+################################################################
+
+# Log level
+#
+# Optional
+# Default: "ERROR"
+# Accepted values, in order of severity: "DEBUG", "INFO", "WARN", "ERROR", "FATAL", "PANIC"
+
+insecureskipverify = true
+
+logLevel = "DEBUG"
+
+defaultEntryPoints = ["http", "https"]
+
+[entryPoints]
+  [entryPoints.http]
+  address = ":80"
+  #[entryPoints.http.redirect]
+  #  entryPoint = "https"
+  [entryPoints.https]
+  address = ":443"
+    [entryPoints.https.tls]
+  [entryPoints.monitor]
+  address = ":8081"
+
+[retry]
+
+[acme]
+acmeLogging = true
+email = "EMAIL"
+storage = "/etc/traefik/acme/acme.json"
+entryPoint = "https"
+  [acme.dnsChallenge]
+    provider = "cloudflare"
+    delayBeforeCheck = 30
+
+[[acme.domains]]
+  main = "DOMAIN"
+[[acme.domains]]
+  main = "*.DOMAIN"
+
+[docker]
+endpoint = "unix:///var/run/docker.sock"
+domain = "DOMAIN"
+watch = true
+exposedbydefault = false
+network = "traefik_proxy"
