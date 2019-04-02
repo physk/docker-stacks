@@ -3,6 +3,9 @@
 echo "Creating docker network"
 docker network create traefik_proxy
 
+echo "Setting Permissions on ${BASE_DIR}"
+chown -hR ${PUID}:${PGID} ${BASE_DIR}
+
 echo "Creating directories"
 mkdir -p ${BASE_DIR}/services/traefik
 mkdir -p ${BASE_DIR}/docker/shared
