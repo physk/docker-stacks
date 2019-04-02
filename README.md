@@ -52,5 +52,5 @@ docker-compose up -d
 ## Install Media Content Aggrgators
 ```
 cd ~/docker-stacks/media_content && \
-docker-compose up
+docker-compose up -d
 ```
