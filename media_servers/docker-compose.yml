@@ -8,8 +8,8 @@ services:
     image: plexinc/pms-docker:plexpass
     restart: unless-stopped
     networks:
-      - default
       - traefik_proxy
+      - default
     environment:
       - "PLEX_UID=${PUID}"
       - "PLEX_GID=${PGID}"
@@ -46,8 +46,8 @@ services:
     image: jellyfin/jellyfin
     restart: unless-stopped
     networks:
-      - default
       - traefik_proxy
+      - default
     environment:
       - "UID=${PUID}"
       - "GID=${PGID}"
@@ -78,10 +78,10 @@ services:
       - "traefik.enable=true"
       - "traefik.frontend.rule=Host:${FUNKWHALE_SUBDOMAIN}.${DOMAIN}"
       - "traefik.port=80"
-      - "traefik.protocol=https"
+      - "traefik.frontend.redirect.entryPoint=https"
     volumes:
       - "${BASE_DIR}/media_servers/funkwhale/data:/data"
-      - "${FUNKWHALE_MUSIC_PATH}/music:/music"
+      - "${FUNKWHALE_MUSIC_PATH}:/music"
 
 networks:
   traefik_proxy:
