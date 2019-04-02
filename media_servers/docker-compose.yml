@@ -34,6 +34,7 @@ services:
       - "traefik.frontend.rule=Host:${PLEX_SUBDOMAIN}.${DOMAIN}"
       - "traefik.port=32400"
       - "traefik.protocol=https"
+      - "com.centurylinklabs.watchtower.enable=true"
     volumes:
       - "/mnt/unionfs:/unionfs"
       - "${BASE_DIR}/media_servers/plex:/config"
@@ -58,6 +59,7 @@ services:
       - "traefik.frontend.rule=Host:${JELLYFIN_SUBDOMAIN}.${DOMAIN}"
       - "traefik.port=8096"
       - "traefik.protocol=https"
+      - "com.centurylinklabs.watchtower.enable=true"
     volumes:
       - "/mnt/unionfs:/media"
       - "${BASE_DIR}/media_servers/jellyfin:/config"
@@ -79,6 +81,7 @@ services:
       - "traefik.frontend.rule=Host:${FUNKWHALE_SUBDOMAIN}.${DOMAIN}"
       - "traefik.port=80"
       - "traefik.frontend.redirect.entryPoint=https"
+      - "com.centurylinklabs.watchtower.enable=true"
     volumes:
       - "${BASE_DIR}/media_servers/funkwhale/data:/data"
       - "${FUNKWHALE_MUSIC_PATH}:/music"

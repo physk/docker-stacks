@@ -16,6 +16,7 @@ services:
       - "traefik.frontend.redirect.entryPoint=https"
       - "traefik.frontend.rule=Host:${SONARRA_SUBDOMAIN}.${DOMAIN}"
       - "traefik.port=8989"
+      - "com.centurylinklabs.watchtower.enable=true"
     volumes:
       - "/mnt/unionfs:/unionfs"
       - "${BASE_DIR}/media_content/sonarra:/config"
@@ -37,6 +38,7 @@ services:
       - "traefik.frontend.redirect.entryPoint=https"
       - "traefik.frontend.rule=Host:${SONARRK_SUBDOMAIN}.${DOMAIN}"
       - "traefik.port=8989"
+      - "com.centurylinklabs.watchtower.enable=true"
     volumes:
       - "/mnt/unionfs:/unionfs"
       - "${BASE_DIR}/media_content/sonarrk:/config"
@@ -58,6 +60,7 @@ services:
       - "traefik.frontend.redirect.entryPoint=https"
       - "traefik.frontend.rule=Host:${RADARRA_SUBDOMAIN}.${DOMAIN}"
       - "traefik.port=7878"
+      - "com.centurylinklabs.watchtower.enable=true"
     volumes:
       - "/mnt/unionfs:/unionfs"
       - "${BASE_DIR}/media_content/radarra:/config"
@@ -79,6 +82,7 @@ services:
       - "traefik.frontend.redirect.entryPoint=https"
       - "traefik.frontend.rule=Host:${RADARRK_SUBDOMAIN}.${DOMAIN}"
       - "traefik.port=7878"
+      - "com.centurylinklabs.watchtower.enable=true"
     volumes:
       - "/mnt/unionfs:/unionfs"
       - "${BASE_DIR}/media_content/radarra:/config"
@@ -100,6 +104,7 @@ services:
       - "traefik.frontend.redirect.entryPoint=https"
       - "traefik.frontend.rule=Host:${OMBIA_SUBDOMAIN}.${DOMAIN}"
       - "traefik.port=3579"
+      - "com.centurylinklabs.watchtower.enable=true"
     volumes:
       - "${BASE_DIR}/media_content/ombia:/config"
       - "${BASE_DIR}/media_content/ombia/appsettings.json:/opt/ombi/appsettings.json"
@@ -120,6 +125,7 @@ services:
       - "traefik.frontend.redirect.entryPoint=https"
       - "traefik.frontend.rule=Host:${OMBIK_SUBDOMAIN}.${DOMAIN}"
       - "traefik.port=3579"
+      - "com.centurylinklabs.watchtower.enable=true"
     volumes:
       - "${BASE_DIR}/media_content/ombik:/config"
       - "${BASE_DIR}/media_content/ombik/appsettings.json:/opt/ombi/appsettings.json"
