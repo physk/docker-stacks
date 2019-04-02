@@ -24,6 +24,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ${BASE_DIR}/services/traefik:/etc/traefik
       - ${BASE_DIR}/docker/shared:/shared
+      - "com.centurylinklabs.watchtower.enable=true"
 
   # Portainer
   portainer:
@@ -43,6 +44,7 @@ services:
       - "traefik.enable=true"
       - "traefik.frontend.rule=Host:${PORTAINER_SUBDOMAIN}.${DOMAIN}"
       - "traefik.port=9000"
+      - "com.centurylinklabs.watchtower.enable=true"
 
   # Speedtest
   speedtest:
@@ -57,6 +59,7 @@ services:
       - "traefik.enable=true"
       - "traefik.frontend.rule=Host:${SPEEDTEST_SUBDOMAIN}.${DOMAIN}"
       - "traefik.port=80"
+      - "com.centurylinklabs.watchtower.enable=true"
 
   # Netdata
   netdata:
@@ -70,6 +73,16 @@ services:
       - "traefik.enable=true"
       - "traefik.frontend.rule=Host:${NETDATA_SUBDOMAIN}.${DOMAIN}"
       - "traefik.port=19999"
+      - "com.centurylinklabs.watchtower.enable=true"
+  # Watchtower
+  watchtower:
+    container_name: watchtower
+    image: v2tec/watchtower:0.2.1
+    command: --cleanup --label-enable
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${BASE_DIR}/services/watchtower/config.json:/config.json:ro
   # Dash
   # dash:
   #   image: getholo/dash
