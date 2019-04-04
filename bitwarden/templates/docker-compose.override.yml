@@ -1,0 +1,17 @@
+version: '3'
+services:
+  nginx:
+    networks:
+      - plexguide
+      - default
+    labels:
+      - traefik.enable=true
+      - traefik.frontend.rule=Host:${BITWARDEN_SUBDOMAIN}.${DOMAIN}
+      - traefik.port=8080
+      - traefik.backend=bitwarden-nginx
+networks:
+  plexguide:
+    external:
+      name: traefik_proxy
+  default:
+    driver: bridge
