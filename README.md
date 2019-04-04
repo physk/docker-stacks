@@ -28,7 +28,8 @@ git clone https://github.com/physk/docker-stacks.git
 ```bash
 cd ~/docker-stacks/services && \
 docker-compose pull && \
-docker-compose run --rm dash /usr/bin/dash-setup.sh```
+docker-compose run --rm dash /usr/bin/dash-setup.sh
+```
 
 ## Setup ENV
 ### Edit .env file
