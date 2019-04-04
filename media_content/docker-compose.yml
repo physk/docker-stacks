@@ -1,7 +1,9 @@
 version: "3"
 services:
-  sonarra:
-    container_name: sonarra
+
+  # Sonarr Adults
+  sonarr-adults:
+    container_name: sonarr-adults
     image: linuxserver/sonarr
     restart: unless-stopped
     networks:
@@ -21,8 +23,10 @@ services:
       - "${BASE_DIR}/media_content/sonarra:/config"
       - "/mnt/nzbget/completed:/completed"
       - "/etc/localtime:/etc/localtime"
-  sonarrk:
-    container_name: sonarrk
+
+  # Sonarr Kids
+  sonarr-kids:
+    container_name: sonarr-kids
     image: linuxserver/sonarr
     restart: unless-stopped
     networks:
@@ -42,8 +46,10 @@ services:
       - "${BASE_DIR}/media_content/sonarrk:/config"
       - "/mnt/nzbget/completed:/completed"
       - "/etc/localtime:/etc/localtime"
-  radarra:
-    container_name: radarra
+
+  # Radarr Adults
+  radarr-adults:
+    container_name: radarr-adults
     image: linuxserver/radarr
     restart: unless-stopped
     networks:
@@ -63,8 +69,10 @@ services:
       - "${BASE_DIR}/media_content/radarra:/config"
       - "/mnt/nzbget/completed:/completed"
       - "/etc/localtime:/etc/localtime"
-  radarrk:
-    container_name: radarrk
+
+  # Radarr Kids
+  radarr-kids:
+    container_name: radarr-kids
     image: linuxserver/radarr
     restart: unless-stopped
     networks:
@@ -84,8 +92,10 @@ services:
       - "${BASE_DIR}/media_content/radarra:/config"
       - "/mnt/nzbget/completed:/completed"
       - "/etc/localtime:/etc/localtime"
-  ombia:
-    container_name: ombia
+
+  # Ombi Adults
+  ombi-adults:
+    container_name: ombi-adults
     image: linuxserver/ombi
     restart: unless-stopped
     networks:
@@ -103,8 +113,10 @@ services:
     volumes:
       - "${BASE_DIR}/media_content/ombia:/config"
       - "/etc/localtime:/etc/localtime"
-  ombik:
-    container_name: ombik
+
+  # Ombi Kids
+  ombi-kids:
+    container_name: ombi-kids
     image: linuxserver/ombi
     restart: unless-stopped
     networks:
@@ -123,6 +135,39 @@ services:
       - "${BASE_DIR}/media_content/ombik:/config"
       - "/etc/localtime:/etc/localtime"
 
+  # Mellow Adults
+  mellow-adults:
+    container_name: mellow-adults
+    image: voidp/mellow:latest
+    networks:
+      - traefik_proxy
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - GUID=${GUID}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.redirect.entryPoint=https"
+      - "traefik.frontend.rule=Host:${MELLOWA_SUBDOMAIN}.${DOMAIN}"
+      - "traefik.port=5060"
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  # Mellow Kids
+  mellow-kids:
+    container_name: mellow-kids
+    image: voidp/mellow:latest
+    networks:
+      - traefik_proxy
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - GUID=${GUID}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.redirect.entryPoint=https"
+      - "traefik.frontend.rule=Host:${MELLOWK_SUBDOMAIN}.${DOMAIN}"
+      - "traefik.port=5060"
+      - "com.centurylinklabs.watchtower.enable=true"
 networks:
   traefik_proxy:
     external:
