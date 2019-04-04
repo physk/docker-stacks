@@ -74,6 +74,7 @@ services:
       - "traefik.frontend.rule=Host:${NETDATA_SUBDOMAIN}.${DOMAIN}"
       - "traefik.port=19999"
       - "com.centurylinklabs.watchtower.enable=true"
+
   # Watchtower
   watchtower:
     container_name: watchtower
@@ -83,6 +84,8 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${BASE_DIR}/services/watchtower/config.json:/config.json:ro
+
+
   # Dash
   # dash:
   #   image: getholo/dash
